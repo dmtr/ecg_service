@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      - MONGODB_URL=mongodb://root:passw@db:27017/ecg_service
+      - ENVIRONMENT=LOCAL
+      - SECRET_KEY=foo
+      - PYTHONPATH=/app/ecg_service
+
+    networks:
+      - app-network
+
+  db:
+    image: mongo:7.0.4
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_container:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=ecg_service
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=passw
+    networks:
+      - app-network
+    healthcheck:
+      test: echo 'db.stats().ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data_container:
