@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    restart: always
     ports:
       - "8000:8000"
     volumes:
@@ -13,7 +12,7 @@ services:
     depends_on:
       - db
     environment:
-      - MONGODB_URL=mongodb://root:passw@db:27017/ecg_service
+      - MONGODB_URL=mongodb://root:passw@db:27017/ecg_service?authSource=admin&retryWrites=true&w=majority
       - ENVIRONMENT=LOCAL
       - SECRET_KEY=foo
       - PYTHONPATH=/app/ecg_service
