@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from ecg_service.config import app_configs, settings
 from ecg_service.database import get_database
 from ecg_service.user.repository import UserRepository
+from ecg_service.user.routes import router as user_router
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(**app_configs, lifespan=lifespan)
+app.include_router(user_router, tags=["Auth"])
 
 
 @app.get("/healthcheck")

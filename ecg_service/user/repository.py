@@ -32,3 +32,8 @@ class UserRepository:
         user = await self.db.user.find_one({"email": email})
         if user:
             return User(**user)
+
+    async def get_user_by_id(self, user_id: ObjectId) -> User:
+        user = await self.db.user.find_one({"_id": user_id})
+        if user:
+            return User(**user)

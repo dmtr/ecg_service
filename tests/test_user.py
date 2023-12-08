@@ -8,18 +8,17 @@ from ecg_service.user.repository import UserRepository
 pytestmark = pytest.mark.asyncio(scope="module")
 
 
-@pytest_asyncio.fixture(scope="module", autouse=True)
-async def db() -> AsyncGenerator:
-    db = get_database()
-
-    await db.user.create_index("email", unique=True)
-
-    yield
-
-    await db.drop_collection("user")
-
-
 class TestUserRepository:
+    @pytest_asyncio.fixture(scope="module", autouse=True)
+    async def db(self) -> AsyncGenerator:
+        db = get_database()
+
+        await db.user.create_index("email", unique=True)
+
+        yield
+
+        await db.drop_collection("user")
+
     @pytest.fixture
     def repository(self):
         return UserRepository()
@@ -29,6 +28,10 @@ class TestUserRepository:
         user_id = await repository.create_admin(email=email, password="test")
         assert user_id
         user = await repository.get_user_by_email(email=email)
+        assert user
+        assert user.email == email
+        assert user.role == "ADMIN"
+        user = await repository.get_user_by_id(user_id)
         assert user
         assert user.email == email
         assert user.role == "ADMIN"
