@@ -5,11 +5,11 @@ import pytest_asyncio
 from ecg_service.database import get_database
 from ecg_service.user.repository import UserRepository
 
-pytestmark = pytest.mark.asyncio(scope="module")
+pytestmark = pytest.mark.asyncio(scope="session")
 
 
 class TestUserRepository:
-    @pytest_asyncio.fixture(scope="module", autouse=True)
+    @pytest_asyncio.fixture(scope="session", autouse=True)
     async def db(self) -> AsyncGenerator:
         db = get_database()
 

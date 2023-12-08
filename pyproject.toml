@@ -19,7 +19,7 @@ pyjwt = "^2.8.0"
 pyyaml = "^6.0.1"
 numpy = "^1.26.2"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
 black = "^23.11.0"
 ipython = "^8.18.1"
