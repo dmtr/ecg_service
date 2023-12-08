@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from ecg_service.user.auth import (create_access_token, decode_token,
@@ -6,6 +7,8 @@ from ecg_service.user.repository import UserRepository
 from ecg_service.user.schemas import Token, User, UserResponse
 from fastapi import APIRouter, Depends, Form, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+logger = logging.getLogger(__name__)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -36,6 +39,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
     user = await user_repository.get_user_by_email(email=username)
     if user is None:
         raise credentials_exception
+    logger.info("Current user: %s", user.id)
     return user
 
 

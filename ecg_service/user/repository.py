@@ -37,3 +37,9 @@ class UserRepository:
         user = await self.db.user.find_one({"_id": user_id})
         if user:
             return User(**user)
+
+    async def add_ecg(self, user_id: ObjectId, ecg_id: str) -> int:
+        res = await self.db.user.update_one(
+            {"_id": user_id}, {"$push": {"ecgs": ecg_id}}
+        )
+        return res.modified_count

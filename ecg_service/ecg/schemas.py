@@ -3,6 +3,10 @@ from typing import List, Optional
 
 from ecg_service.models import EcgBaseModel
 from pydantic import Field, validator
+from pydantic.functional_validators import BeforeValidator
+from typing_extensions import Annotated
+
+PyObjectId = Annotated[str, BeforeValidator(str)]
 
 
 class LeadInput(EcgBaseModel):
@@ -21,3 +25,14 @@ class ECGInput(EcgBaseModel):
     id: str
     date: datetime
     leads: List[LeadInput]
+
+
+class Analysis(EcgBaseModel):
+    name: str
+    value: float
+
+
+class ECGResponse(ECGInput):
+    analysis: List[Analysis] = []
+    created_at: datetime
+    updated_at: datetime
