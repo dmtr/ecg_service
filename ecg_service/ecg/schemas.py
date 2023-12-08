@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from ecg_service.models import EcgBaseModel
-from pydantic import Field, validator
+from pydantic import Field, model_validator
 from pydantic.functional_validators import BeforeValidator
 from typing_extensions import Annotated
 
@@ -11,14 +11,14 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 class LeadInput(EcgBaseModel):
     name: str
-    number_of_samples: Optional[int] = Field(None, alias="number of samples")
+    number_of_samples: Optional[int] = Field(None)
     signal: List[int]
 
-    @validator("number_of_samples", always=True, pre=True)
-    def calculate_number_of_samples(cls, v, values):
-        if "signal" in values and v is None:
-            return len(values["signal"])
-        return v
+    @model_validator(mode="after")
+    def calculate_number_of_samples(self):
+        if self.number_of_samples is None:
+            self.number_of_samples = len(self.signal)
+        return self
 
 
 class ECGInput(EcgBaseModel):

@@ -7,7 +7,7 @@ class ZeroCrossingsAnalyzer(BaseAnalyzer):
     name = "ZeroCrossingsAnalyzer"
 
     @staticmethod
-    def count_zero_crossings_numpy(data):
+    def count_zero_crossings(data: list[int]) -> int:
         data_array = np.array(data)
         non_zero_data = data_array[data_array != 0]
         sign_changes = np.diff(np.sign(non_zero_data)) != 0
@@ -18,7 +18,7 @@ class ZeroCrossingsAnalyzer(BaseAnalyzer):
         for lead in ecg.leads:
             result = AnalysisResult(
                 lead=lead.name,
-                value=self.count_zero_crossings_numpy(lead.signal),
+                value=self.count_zero_crossings(lead.signal),
             )
             res.append(Analysis(analysis=self.name, result=result))
         return res
