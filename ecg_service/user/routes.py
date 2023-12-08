@@ -72,7 +72,7 @@ async def create_customer(
 ):
     if current_user.role != "ADMIN":
         raise HTTPException(
-            status_code=status.HTTP_403_UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
             headers={"WWW-Authenticate": "Bearer"},
         )
 
