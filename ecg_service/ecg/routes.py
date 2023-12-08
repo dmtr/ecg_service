@@ -1,10 +1,12 @@
 from typing import Annotated
 
+from ecg_service.ecg.analyze import analyze
 from ecg_service.ecg.repository import EcgRepository
 from ecg_service.ecg.schemas import ECGInput, ECGResponse
 from ecg_service.user.repository import UserRepository
 from ecg_service.user.routes import get_current_user
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi import (APIRouter, BackgroundTasks, Body, Depends, HTTPException,
+                     status)
 
 router = APIRouter()
 
@@ -12,6 +14,7 @@ router = APIRouter()
 @router.post("/ecgs", status_code=status.HTTP_201_CREATED, response_model=ECGResponse)
 async def create_ecg(
     current_user: Annotated[UserRepository, Depends(get_current_user)],
+    background_tasks: BackgroundTasks,
     ecg_input: ECGInput = Body(...),
 ):
     if current_user.role != "CUSTOMER":
@@ -29,6 +32,7 @@ async def create_ecg(
             detail="Failed to add ECG to user",
         )
     ecg = await ecg_repository.get_ecg_by_id(ecg_input.id)
+    background_tasks.add_task(analyze, ecg)
     return ecg
 
 

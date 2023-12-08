@@ -2,7 +2,7 @@ import datetime
 
 from bson import ObjectId
 from ecg_service.database import get_database
-from ecg_service.ecg.schemas import ECGInput, ECGResponse
+from ecg_service.ecg.schemas import Analysis, ECGInput, ECGResponse
 
 
 class EcgRepository:
@@ -22,3 +22,13 @@ class EcgRepository:
         ecg = await self.db.ecg.find_one({"id": ecg_id})
         if ecg:
             return ECGResponse(**ecg)
+
+    async def add_analysis(self, ecg_id: str, analysis: Analysis) -> int:
+        res = await self.db.ecg.update_one(
+            {"id": ecg_id},
+            {
+                "$push": {"analysis": analysis.model_dump()},
+                "$set": {"updated_at": datetime.datetime.utcnow()},
+            },
+        )
+        return res.modified_count

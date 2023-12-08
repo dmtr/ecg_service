@@ -27,9 +27,14 @@ class ECGInput(EcgBaseModel):
     leads: List[LeadInput]
 
 
-class Analysis(EcgBaseModel):
-    name: str
+class AnalysisResult(EcgBaseModel):
+    lead: str
     value: float
+
+
+class Analysis(EcgBaseModel):
+    analysis: str
+    result: AnalysisResult
 
 
 class ECGResponse(ECGInput):
