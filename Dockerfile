@@ -18,4 +18,4 @@ COPY . /app
 WORKDIR /app
 
 
-CMD ["uvicorn", "ecg_service.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "ecg_service.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-config", "log_conf.yaml"]
