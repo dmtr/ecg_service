@@ -24,6 +24,10 @@ async def create_ecg(
         )
 
     ecg_repository = EcgRepository()
+    if await ecg_repository.get_ecg_by_id(ecg_input.id):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="ECG already exists"
+        )
     await ecg_repository.create_ecg(ecg_input)
     user_repository = UserRepository()
     if not await user_repository.add_ecg(current_user.database_id, ecg_input.id):
