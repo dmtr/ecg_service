@@ -12,6 +12,10 @@ To start the service, run the following command:
 
 You can access the OpenAPI documentation at http://localhost:8000/docs.
 
+To run the tests, run the following command:
+
+`ENVIRONMENT=TESTING docker compose -f docker-compose.yml run app pytest -vv tests`
+
 ## Design Notes
 ### Assumptions
 We assume that approximately 8% of the population suffers from heart diseases. Therefore, for a country with a population of 40 million people, there would be around 3,200,000 potential cases. Considering an estimation of 12 ECGs per person per year, we can expect a total of 38,400,000 ECGs per year.
