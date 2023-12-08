@@ -28,6 +28,9 @@ class Config(BaseSettings):
     SITE_DOMAIN: str = "myapp.com"
     ENVIRONMENT: Environment = Environment.LOCAL
     SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ADMIN_USER: str
+    ADMIN_PASSWORD: str
 
 
 settings = Config()

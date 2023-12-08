@@ -12,11 +12,12 @@ services:
     depends_on:
       - db
     environment:
-      - MONGODB_URL=mongodb://root:passw@db:27017/ecg_service?authSource=admin&retryWrites=true&w=majority
-      - ENVIRONMENT=LOCAL
-      - SECRET_KEY=foo
-      - PYTHONPATH=/app/ecg_service
-
+      MONGODB_URL: mongodb://root:passw@db:27017/${DB_NAME:-ecg_service}?authSource=admin&retryWrites=true&w=majority
+      ENVIRONMENT: ${ENVIRONMENT:-LOCAL}
+      SECRET_KEY: 08f25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e9
+      ALGORITHM: HS256
+      ADMIN_USER: test@test.me
+      ADMIN_PASSWORD: changeMe
     networks:
       - app-network
 
